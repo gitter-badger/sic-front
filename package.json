@@ -1,0 +1,27 @@
+{
+  "name": "sic-front",
+  "version": "0.1.0",
+  "description": "Sfeir Innovation Challenge - Front",
+  "repository": "sic-front",
+  "license": "MIT",
+  "config": {
+    "buildDir": "./build",
+    "devHost": "localhost",
+    "devPort": 8080
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development node dev-server"
+  },
+  "devDependencies": {
+    "babel-core": "^5.8.24",
+    "babel-loader": "^5.3.2",
+    "file-loader": "^0.8.4",
+    "react-hot-loader": "^1.3.0",
+    "webpack": "^1.12.2",
+    "webpack-dev-server": "^1.11.0"
+  },
+  "dependencies": {
+    "react": "^0.13.3",
+    "react-router": "^0.13.4"
+  }
+}
