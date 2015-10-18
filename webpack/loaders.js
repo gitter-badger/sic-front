@@ -1,4 +1,5 @@
 var util = require('util');
+var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var pkg = require('../package.json');
@@ -31,4 +32,12 @@ var cssLoader = {
    loader: stages.DEV ? 'style!css?sourceMap' : ExtractTextPlugin.extract('style', 'css')
 }
 
-module.exports = [jsxLoader, htmlLoader, cssLoader];
+var sassLoader = (function(){
+  var sassParams = 'includePaths[]=' + path.resolve(__dirname, '../node_modules')
+  return {
+    test: /\.sass$/,
+    loader: stages.DEV ? 'style!css?sourceMap!sass?' + sassParams : ExtractTextPlugin.extract('style', 'css', 'sass?' + sassParams)
+  }
+})();
+
+module.exports = [jsxLoader, htmlLoader, cssLoader, sassLoader];
