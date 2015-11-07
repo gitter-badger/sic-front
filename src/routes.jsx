@@ -4,13 +4,12 @@ import {
   Route
 } from 'react-router';
 
-import App from './components/App.jsx';
-import Hello from './components/Hello.jsx';
-import World from './components/World.jsx';
+import App from './components/App';
+import { Dashboard } from './components/Dashboard';
+import Login from './components/Login';
 
 export default (
   <Route handler={App}>
-    <Route handler={Hello} name="hello" path="/hello"/>
-    <Route handler={World} name="world" path="/world"/>
+    <Route name="dashboard" path="/" handler={Dashboard}/>
   </Route>
 );

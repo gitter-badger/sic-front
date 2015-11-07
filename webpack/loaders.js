@@ -25,17 +25,17 @@ var htmlLoader = {
     'file?name=[path][name].[ext]',
     util.format('template-html?raw=true&engine=lodash&version=%s&debug=%s', pkg.version, stages.DEV)
   ]
-}
+};
 
 var cssLoader = {
    test: /\.css$/,
    loader: stages.DEV ? 'style!css?sourceMap' : ExtractTextPlugin.extract('style', 'css')
-}
+};
 
 var sassLoader = (function(){
-  var sassParams = 'includePaths[]=' + path.resolve(__dirname, '../node_modules')
+  var sassParams = 'includePaths[]=' + path.resolve(__dirname, '../node_modules');
   return {
-    test: /\.sass$/,
+    test: /\.scss$/,
     loader: stages.DEV ? 'style!css?sourceMap!sass?' + sassParams : ExtractTextPlugin.extract('style', 'css', 'sass?' + sassParams)
   }
 })();

@@ -1,0 +1,47 @@
+@import "bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
+@import "bootstrap-sass/assets/stylesheets/bootstrap";
+@import url(https://fonts.googleapis.com/css?family=Lato:400,300,300italic,400italic,700,700italic,900,900italic);
+
+$grey: #D8E9F0;
+$blue: #4AA0D5;
+$black: #454553;
+$red: #EB586F;
+
+body {
+  font-family: 'Lato', sans-serif;
+
+}
+
+.navbar-default.navbar {
+  background-color: $black;
+
+}
+
+.btn.btn-primary {
+  background-color: $blue;
+  border-color: $blue;
+
+}
+
+.btn.btn-info {
+  background-color: $red;
+  border-color: $red;
+
+}
+
+.tabRow {
+  margin-bottom: 15px;
+
+  .actionButton {
+    padding-right: 0px;
+  }
+
+}
+
+.panel.panel-card {
+  .panel-heading {
+    background-color: $black;
+    color: white;
+    //  border: 0px;
+  }
+}

@@ -2,6 +2,9 @@ import React from 'react';
 
 import { Route, Link, RouteHandler } from 'react-router';
 
+import NavBar from './NavBar';
+import Dashboard from './Dashboard';
+
 export default class App extends React.Component {
 
   constructor(props) {
@@ -10,13 +13,9 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <h1>App</h1>
-        <ul>
-          <li><Link to="hello">Hello</Link></li>
-          <li><Link to="world">World</Link></li>
-        </ul>
-        <div>
+      <div className="content">
+        <NavBar/>
+        <div className="container">
           <RouteHandler />
         </div>
       </div>

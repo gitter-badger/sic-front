@@ -1,5 +1,5 @@
 import './index.html';
-import './styles/app.sass';
+import './styles/app.scss';
 
 import React from 'react';
 import Router, { Route } from 'react-router';

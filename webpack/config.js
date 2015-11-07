@@ -2,9 +2,9 @@ var path = require('path');
 var util = require('util');
 var pkg = require('../package.json');
 
-var stages = require('./stages')
-var loaders = require('./loaders')
-var plugins = require('./plugins')
+var stages = require('./stages');
+var loaders = require('./loaders');
+var plugins = require('./plugins');
 
 var config = {
   context: path.join(__dirname, '../src'),
@@ -23,8 +23,11 @@ var config = {
   module: {
     loaders: loaders
   },
-  plugins: plugins
-}
+  plugins: plugins,
+  resolve: {
+    extensions: ['', '.js', '.json', '.jsx']
+  }
+};
 
 if (stages.DEV) {
   config.entry.app.unshift('webpack/hot/dev-server');
@@ -38,6 +41,6 @@ if (stages.DEV) {
   }
 }
 
-console.log(JSON.stringify(config, null, 2))
+console.log(JSON.stringify(config, null, 2));
 
 module.exports = config;
