@@ -14,7 +14,7 @@ export default class ToolBar extends React.Component {
     return (
       <div className="row tool-bar">
         <div className="col-md-12">
-          <Link to="invoice">
+          <Link to="/invoice">
             <button className="btn btn-info pull-right" type="button">
               New Invoice
               <i className="fa fa-plus fa-fw"></i>

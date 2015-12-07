@@ -34,8 +34,8 @@ export class InvoiceForm extends React.Component {
                 <label htmlFor="source" className="col-sm-3 control-label">From</label>
 
                 <div className="col-sm-9">
-                  <select className="form-control" id="source" valueLink={this.linkInvoice('from')}>
-                    <option value="" disabled selected label="Please select a counterparty"/>
+                  <select className="form-control" id="source" defaultValue={undefined} valueLink={this.linkInvoice('from')}>
+                    <option value={undefined} disabled label="Please select a counterparty"/>
                     <option value="3">Annabelle</option>
                   </select>
                 </div>

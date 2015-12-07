@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router';
-import { Navbar, NavBrand, Nav, NavItem } from 'react-bootstrap/lib'
+import { IndexLink } from 'react-router';
+import { Navbar, NavbarBrand, Nav, NavItem } from 'react-bootstrap/lib'
 
 export default class NavBar extends React.Component {
   constructor(props) {
@@ -37,7 +37,9 @@ export default class NavBar extends React.Component {
 
     return (
       <Navbar staticTop={true}>
-        <NavBrand>Continuous Invoice</NavBrand>
+        <NavbarBrand>
+          <IndexLink to="/">Continuous Invoice</IndexLink>
+        </NavbarBrand>
         {loginButton}
       </Navbar>
     )
