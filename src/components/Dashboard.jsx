@@ -51,7 +51,9 @@ export class Dashboard extends React.Component {
   render() {
     return (
       <div className="row">
-        <ToolBar/>
+        <div className="col-sm-12">
+          <ToolBar/>
+        </div>
 
         <div className="col-md-12">
           {/** Content Tab **/}
