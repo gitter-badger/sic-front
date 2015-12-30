@@ -1,5 +1,4 @@
 import React from 'react';
-import Numeral from 'numeral';
 import { DropdownButton, MenuItem } from 'react-bootstrap/lib'
 
 export class Card extends React.Component {
@@ -23,7 +22,7 @@ export class Card extends React.Component {
         </div>
         <ul className="list-group">
           <li className="list-group-item">
-            {Numeral(this.props.amount).format('0.00')}
+            {this.props.amount}
             &nbsp;{this.props.currency}
           </li>
           {communication}
