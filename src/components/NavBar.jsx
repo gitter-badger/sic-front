@@ -25,7 +25,6 @@ export default class NavBar extends React.Component {
   }
 
   render() {
-    console.debug('loggedIn ?', this.state.isLoggedIn);
     let loginButton =
       <a className="btn btn-info navbar-btn navbar-right" onClick={this.signIn.bind(this)}>
         Sign In
