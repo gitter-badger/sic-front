@@ -1,54 +1,18 @@
 import React from 'react';
+import Relay from 'react-relay';
 
 import ToolBar from './ToolBar';
-import { Card } from './Card';
+import Transfer from './Transfer';
 
-export class Dashboard extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      cards: [
-        {
-          id: 1,
-          source: "Alexis",
-          counterparty: "Lampiris",
-          amount: 52.39,
-          currency: '€'
-        },
-        {
-          id: 2,
-          source: "Alexis",
-          counterparty: "SWDE",
-          amount: 12.46,
-          currency: "€"
-        },
-        {
-          id: 3,
-          source: "Alexis",
-          counterparty: "Loyer",
-          amount: 695,
-          currency: "€"
-        },
-        {
-          id: 4,
-          source: "Alexis",
-          counterparty: "Scarlet",
-          amount: 39,
-          currency: "€"
-        },
-        {
-          id: 5,
-          source: "Alexis",
-          counterparty: "Annabelle",
-          amount: 3600.43,
-          currency: "€",
-          communication: "Visa"
-        }
-      ]
-    };
+class Dashboard extends React.Component {
+  static propTypes = {
+    viewer: React.PropTypes.object.isRequired
   }
 
   render() {
+    const {viewer} = this.props;
+    const transfers = viewer.transfers.edges;
+
     return (
       <div className="row">
         <div className="col-sm-12">
@@ -60,12 +24,11 @@ export class Dashboard extends React.Component {
           <div className="tab-content">
             <div role="tabpanel" className="tab-pane active" id="open">
               <div className="row">
-                { this.state.cards.map((card) =>
-                    <div key={card.id} className="col-md-3">
-                      <Card {...card}/>
+                { transfers.map(({node}) =>
+                    <div key={node.id} className="col-md-3">
+                      <Transfer viewer={viewer} transfer={node}/>
                     </div>
-                ) }
-
+                )}
               </div>
             </div>
 
@@ -89,3 +52,26 @@ export class Dashboard extends React.Component {
     )
   }
 }
+
+export default Relay.createContainer(Dashboard, {
+  prepareVariables() {
+    return {
+      limit: -1 >>> 1
+    };
+  },
+
+  fragments: {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        transfers(first: $limit) {
+          edges {
+            node {
+              id,
+              ${Transfer.getFragment('transfer')}
+            }
+          }
+        }
+      }
+    `
+  }
+})
