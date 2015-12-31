@@ -1,54 +1,74 @@
 import React from 'react';
+import Relay from 'react-relay';
 import _ from 'lodash';
 import moment from 'moment';
+import {Link} from 'react-router';
 
-export class InvoiceForm extends React.Component {
+import AddTransferMutation from '../mutations/AddTransferMutation';
+
+class TransferForm extends React.Component {
+  static propTypes = {
+    viewer: React.PropTypes.object.isRequired
+  }
+
   constructor(props) {
     super(props);
     this.state = {
-      invoice: {
+      transfer: {
         currency: 'EUR',
         dueDate: moment().format('YYYY-MM-DD')
       }
     }
   }
 
-  linkInvoice(p) {
+  linkState(p) {
     return {
-      value: this.state.invoice[p],
-      requestChange: (value) => this.setState({
-        invoice: _.set(this.state.invoice, p, value)
-      })
+      value: _.get(this.state, p),
+      requestChange: (value) => this.setState((prevState) => _.set(prevState, p, value))
     }
   }
 
+  onFormSubmit = (e) => {
+    e.preventDefault();
+
+    const {viewer} = this.props;
+    const {transfer} = this.state;
+
+    Relay.Store.update(
+      new AddTransferMutation({viewer, transfer}),
+      {
+        onSuccess: () => this.props.history.push('/'),
+        onFailure: (e) => console.warn(e)
+      }
+    );
+  }
+
+  renderFrom() {
+    return (
+      <div className="form-group">
+        <label htmlFor="source" className="col-sm-3 control-label">From</label>
+
+        <div className="col-sm-9">
+          <input type="text" className="form-control" id="source" valueLink={this.linkState('transfer.from')}/>
+        </div>
+      </div>
+    )
+  }
 
   render() {
     return (
       <div className="row">
         <div className="col-sm-6 col-sm-offset-3">
-          <form className="form-horizontal">
+          <form className="form-horizontal" onSubmit={this.onFormSubmit.bind(this)}>
             <fieldset>
-              <legend>New transaction</legend>
-              <div className="form-group">
-                <label htmlFor="source" className="col-sm-3 control-label">From</label>
-
-                <div className="col-sm-9">
-                  <select className="form-control" id="source" defaultValue={undefined} valueLink={this.linkInvoice('from')}>
-                    <option value={undefined} disabled label="Please select a counterparty"/>
-                    <option value="3">Annabelle</option>
-                  </select>
-                </div>
-              </div>
+              <legend>New transfer</legend>
+              {this.renderFrom()}
 
               <div className="form-group">
                 <label htmlFor="source" className="col-sm-3 control-label">To</label>
 
                 <div className="col-sm-9">
-                  <select className="form-control" id="source">
-                    <option value="0">BE04 ... 3031</option>
-                    <option value="1">LU00 ... 0000</option>
-                  </select>
+                  <input type="text" className="form-control" id="source" valueLink={this.linkState('transfer.to')}/>
                 </div>
               </div>
 
@@ -56,10 +76,10 @@ export class InvoiceForm extends React.Component {
                 <label htmlFor="amount" className="col-sm-3 control-label">Amount</label>
 
                 <div className="col-sm-6">
-                  <input type="number" className="form-control" id="amount" valueLink={this.linkInvoice('amount')}/>
+                  <input type="number" className="form-control" id="amount" valueLink={this.linkState('transfer.amount')}/>
                 </div>
                 <div className="col-sm-3">
-                  <select className="form-control" valueLink={this.linkInvoice('currency')}>
+                  <select className="form-control" valueLink={this.linkState('transfer.currency')}>
                     <option value="EUR">EUR</option>
                     <option value="USD">USD</option>
                   </select>
@@ -70,7 +90,7 @@ export class InvoiceForm extends React.Component {
                 <label htmlFor="due-date" className="col-sm-3 control-label">Due date</label>
 
                 <div className="col-sm-9">
-                  <input type="date" className="form-control" id="due-date" valueLink={this.linkInvoice('dueDate')}/>
+                  <input type="date" className="form-control" id="due-date" valueLink={this.linkState('transfer.dueDate')}/>
                 </div>
               </div>
 
@@ -79,7 +99,7 @@ export class InvoiceForm extends React.Component {
 
                 <div className="col-sm-9">
                   <input type="text" className="form-control" id="communication"
-                         valueLink={this.linkInvoice('communication')}
+                         valueLink={this.linkState('transfer.communication')}
                     />
                 </div>
               </div>
@@ -97,5 +117,12 @@ export class InvoiceForm extends React.Component {
 
     )
   }
-
 }
+
+export default Relay.createContainer(TransferForm, {
+  fragments: {
+    viewer: () => Relay.QL`fragment on Viewer {
+      ${AddTransferMutation.getFragment('viewer')}
+    }`
+  }
+})

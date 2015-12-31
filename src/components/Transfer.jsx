@@ -1,33 +1,40 @@
 import React from 'react';
+import Relay from 'react-relay';
 import { DropdownButton, MenuItem } from 'react-bootstrap/lib'
+import moment from 'moment';
 
-export class Card extends React.Component {
+class Transfer extends React.Component {
+
+  static propTypes = {
+    transfer: React.PropTypes.object.isRequired
+  }
 
   iPaid(e, from) {
     console.debug('I paid from', from)
   }
 
   render() {
+    const {transfer} = this.props;
 
-    let communication = <li className="list-group-item">{this.props.communication}</li>;
-    if (!this.props.communication)
+    let communication = <li className="list-group-item">{transfer.communication}</li>;
+    if (!transfer.communication)
       communication = <li className="list-group-item text-muted"><em>No communication</em></li>;
 
     return (
       <div className="panel panel-default panel-card">
         <div className="panel-heading">
           <h3 className="panel-title">
-            {this.props.counterparty}
+            {transfer.from}<i className="fa fa-fw fa-arrow-right"/>{transfer.to}
           </h3>
         </div>
         <ul className="list-group">
           <li className="list-group-item">
-            {this.props.amount}
-            &nbsp;{this.props.currency}
+            {transfer.amount}
+            &nbsp;{transfer.currency}
           </li>
           {communication}
           <li className="list-group-item">
-            16/11/2015
+            {moment(transfer.dueDate).format('DD/MM/YYYY')}
           </li>
           <li className="list-group-item text-center">
             <DropdownButton bsStyle="primary" title="I paid from" id="account-dropdown" onSelect={this.iPaid.bind(this)}>
@@ -47,10 +54,12 @@ export class Card extends React.Component {
   }
 }
 
-Card.propTypes = {
-  source: React.PropTypes.string.isRequired,
-  counterparty: React.PropTypes.string.isRequired,
-  amount: React.PropTypes.number.isRequired,
-  currency: React.PropTypes.string.isRequired,
-  communication: React.PropTypes.string
-};
+export default Relay.createContainer(Transfer, {
+  fragments: {
+    transfer: () => Relay.QL`
+      fragment on Transfer {
+        from, to, amount, currency, dueDate, communication
+      }
+    `
+  }
+})

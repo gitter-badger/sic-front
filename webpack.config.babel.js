@@ -1,43 +1,48 @@
 import path from 'path';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import webpack from 'webpack';
 
 const production = process.env.NODE_ENV === 'production';
 
 export default {
-  entry: './src/client',
+  target: "web",
+  context: path.join(__dirname, './src'),
+  entry: {
+    app: './client'
+  },
   output: {
-    path: './build',
-    filename: 'bundle.js'
+    path: path.resolve('./build'),
+    publicPath: '/',
+    filename: '[name].js'
   },
   module: {
     loaders: [
       {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel',
         query: {
           // This can't be loaded through .babelrc for some reason.
-          plugins: ['./tools/babelRelayPlugin']
+          plugins: ['../tools/babelRelayPlugin']
         }
       },
       {test: /\.css$/, loader: 'style!css'},
-      {test: /\.scss$/, loader: 'style!css?sourceMap!sass?includePaths[]=' + path.resolve('./node_modules')}
+      {test: /\.scss$/, loader: 'style!css?sourceMap!sass?includePaths[]=' + path.resolve('./node_modules')},
+      {test: /\.html$/, loader: 'file?name=[path][name].[ext]'}
     ]
   },
   resolve: {
-    extensions: ['', '.js']
+    extensions: ['', '.js', '.jsx']
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {NODE_ENV: JSON.stringify(process.env.NODE_ENV)}
-    }),
-    new HtmlWebpackPlugin({
-      title: 'Relay • TodoMVC'
     })
   ],
   devtool: production ? 'source-map' : 'inline-source-map',
   devServer: {
-    contentBase: './build'
+    contentBase: path.resolve('./build'),
+    hot: true,
+    inline: true,
+    stats: { colors: true }
   }
 };

@@ -1,3 +1,4 @@
+import './index.html';
 import './styles/app.scss';
 
 import createHashHistory from 'history/lib/createHashHistory';
