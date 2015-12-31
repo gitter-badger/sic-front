@@ -10,7 +10,8 @@ class Dashboard extends React.Component {
   }
 
   render() {
-    const transfers = this.props.viewer.transfers.edges;
+    const {viewer} = this.props;
+    const transfers = viewer.transfers.edges;
 
     return (
       <div className="row">
@@ -25,10 +26,9 @@ class Dashboard extends React.Component {
               <div className="row">
                 { transfers.map(({node}) =>
                     <div key={node.id} className="col-md-3">
-                      <Transfer transfer={node}/>
+                      <Transfer viewer={viewer} transfer={node}/>
                     </div>
                 )}
-
               </div>
             </div>
 
@@ -54,10 +54,16 @@ class Dashboard extends React.Component {
 }
 
 export default Relay.createContainer(Dashboard, {
+  prepareVariables() {
+    return {
+      limit: -1 >>> 1
+    };
+  },
+
   fragments: {
     viewer: () => Relay.QL`
       fragment on Viewer {
-        transfers(first: 12345) {
+        transfers(first: $limit) {
           edges {
             node {
               id,

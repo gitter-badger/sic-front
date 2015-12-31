@@ -1,16 +1,22 @@
 import React from 'react';
 import Relay from 'react-relay';
-import { DropdownButton, MenuItem } from 'react-bootstrap/lib'
 import moment from 'moment';
+
+import DeleteTransferMutation from '../mutations/DeleteTransferMutation';
 
 class Transfer extends React.Component {
 
   static propTypes = {
+    viewer: React.PropTypes.object.isRequired,
     transfer: React.PropTypes.object.isRequired
   }
 
-  iPaid(e, from) {
-    console.debug('I paid from', from)
+  paid(e) {
+    const {viewer, transfer} = this.props;
+
+    Relay.Store.update(
+      new DeleteTransferMutation({viewer, transfer})
+    );
   }
 
   render() {
@@ -24,7 +30,10 @@ class Transfer extends React.Component {
       <div className="panel panel-default panel-card">
         <div className="panel-heading">
           <h3 className="panel-title">
-            {transfer.from}<i className="fa fa-fw fa-arrow-right"/>{transfer.to}
+            <div>{transfer.from}</div>
+            <i className="fa fa-fw fa-arrow-down"/>
+            <div>{transfer.toAka}</div>
+            <small>{transfer.to}</small>
           </h3>
         </div>
         <ul className="list-group">
@@ -37,16 +46,9 @@ class Transfer extends React.Component {
             {moment(transfer.dueDate).format('DD/MM/YYYY')}
           </li>
           <li className="list-group-item text-center">
-            <DropdownButton bsStyle="primary" title="I paid from" id="account-dropdown" onSelect={this.iPaid.bind(this)}>
-              <MenuItem eventKey="1">
-                <strong>Mon compte belge</strong><br/>
-                <small className="text-muted"><em>BE04 ... 3031</em></small>
-              </MenuItem>
-              <MenuItem eventKey="2">
-                <strong>Mon compte lulu</strong><br/>
-                <small className="text-muted"><em>LU00 ... 0000</em></small>
-              </MenuItem>
-            </DropdownButton>
+            <button type="button" className="btn btn-primary" onClick={this.paid.bind(this)}>
+              Paid
+            </button>
           </li>
         </ul>
       </div>
@@ -56,9 +58,15 @@ class Transfer extends React.Component {
 
 export default Relay.createContainer(Transfer, {
   fragments: {
+    viewer: () => Relay.QL`
+      fragment on Viewer {
+        ${DeleteTransferMutation.getFragment('viewer')}
+      }
+    `,
     transfer: () => Relay.QL`
       fragment on Transfer {
-        from, to, amount, currency, dueDate, communication
+        from, to, toAka, amount, currency, dueDate, communication,
+        ${DeleteTransferMutation.getFragment('transfer')}
       }
     `
   }
